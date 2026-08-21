@@ -189,3 +189,12 @@ CLAUDE.md
 .gsd
 codedb.snapshot
 scripts/activity-labels/results/
+
+# MOI deployment runtime data (never commit) - anchored to repo root so they do
+# not shadow source dirs such as api/server/services/Files/images/
+/ollama_data/
+/meili_data_v1.35.1/
+/data-node/
+/logs/
+/images/
+/uploads/

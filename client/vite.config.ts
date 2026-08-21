@@ -100,6 +100,7 @@ export default defineConfig(({ command }) => ({
         globPatterns: [
           '**/*.{js,css,html}',
           'assets/favicon*.png',
+          'assets/logo.svg',
           'assets/icon-*.png',
           'assets/apple-touch-icon*.png',
           'assets/maskable-icon.png',
@@ -140,8 +141,8 @@ export default defineConfig(({ command }) => ({
       },
       includeAssets: [],
       manifest: {
-        name: 'LibreChat',
-        short_name: 'LibreChat',
+        name: 'MOI - AI Chat',
+        short_name: 'MOI',
         display: 'standalone',
         background_color: '#000000',
         theme_color: '#009688',

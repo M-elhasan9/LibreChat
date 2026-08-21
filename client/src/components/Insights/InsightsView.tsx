@@ -22,7 +22,7 @@ import { useAuthContext, useDocumentTitle, useLocalize } from '~/hooks';
 import OpenSidebar from '~/components/Chat/Menus/OpenSidebar';
 import { LocalizedDateRangePicker } from '~/components/ui';
 import { getRollingDateRange } from './dateRange';
-import { cn } from '~/utils';
+import { cn, DEFAULT_APP_TITLE } from '~/utils';
 
 type ShortcutRange = Exclude<InsightsRange, 'custom'>;
 type Localize = ReturnType<typeof useLocalize>;
@@ -561,7 +561,7 @@ export default function InsightsView() {
   const insights = useInsightsQuery(insightsParams, { enabled: isAllowed });
   const data = insights.data;
 
-  useDocumentTitle(`${localize('com_insights_title')} | LibreChat`);
+  useDocumentTitle(`${localize('com_insights_title')} | ${DEFAULT_APP_TITLE}`);
 
   useEffect(
     () => () => {

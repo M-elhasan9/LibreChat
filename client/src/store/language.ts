@@ -1,5 +1,6 @@
 import { atom } from 'recoil';
 import Cookies from 'js-cookie';
+import { normalizeLocale } from '~/locales/i18n';
 import { atomWithLocalStorage } from './utils';
 
 const readStoredLang = () => {
@@ -20,11 +21,18 @@ const readStoredLang = () => {
   }
 };
 
+/** Selector values for the locales this deployment enables. */
+const selectorValueByLocale = {
+  en: 'en-US',
+  ar: 'ar-EG',
+} as const;
+
 const defaultLang = () => {
   const userLang =
     (typeof navigator !== 'undefined' ? navigator.language || navigator.languages?.[0] : null) ??
     'en';
-  return Cookies.get('lang') || readStoredLang() || userLang;
+  const requested = Cookies.get('lang') || readStoredLang() || userLang;
+  return selectorValueByLocale[normalizeLocale(requested)];
 };
 
 const lang = atomWithLocalStorage('lang', defaultLang());

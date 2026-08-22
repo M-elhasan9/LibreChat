@@ -60,5 +60,7 @@ export { default as createPayload } from './createPayload';
 export * from './feedback';
 export * from './parameterSettings';
 export * from './agentToolOptions';
+/* locales and text direction */
+export * from './locales';
 /* code-execution sandbox */
 export * from './codeEnvRef';

@@ -1,11 +1,12 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
+import { enabledLocales, normalizeAppLocale, getLocaleDirection } from 'librechat-data-provider';
 import translationEn from './en/translation.json';
 
 export const defaultNS = 'translation';
 
-export const supportedLocales = ['ar', 'en'] as const;
+export const supportedLocales = enabledLocales;
 
 export type SupportedLocale = (typeof supportedLocales)[number];
 export type TranslationResource = Record<string, string>;
@@ -19,21 +20,6 @@ const localeLoaders: Record<
   () => Promise<{ default: TranslationResource }>
 > = {
   ar: () => import('./ar/translation.json'),
-};
-
-const localeByLowercase = supportedLocales.reduce<Record<string, SupportedLocale>>(
-  (acc, locale) => {
-    acc[locale.toLowerCase()] = locale;
-    return acc;
-  },
-  {},
-);
-
-const localeAliases: Record<string, SupportedLocale> = {
-  'ar-eg': 'ar',
-  'ar-sa': 'ar',
-  'en-us': 'en',
-  'en-gb': 'en',
 };
 
 const loadedLocales = new Set<SupportedLocale>(['en']);
@@ -82,23 +68,7 @@ function getNavigatorLanguage() {
 
 export function normalizeLocale(locale?: string | null): SupportedLocale {
   const requested = locale === 'auto' ? getNavigatorLanguage() : locale;
-  if (!requested) {
-    return 'en';
-  }
-
-  const normalized = requested.replace(/_/g, '-').toLowerCase();
-  const exact = localeByLowercase[normalized];
-  if (exact) {
-    return exact;
-  }
-
-  const alias = localeAliases[normalized];
-  if (alias) {
-    return alias;
-  }
-
-  const base = normalized.split('-')[0];
-  return localeByLowercase[base] ?? localeAliases[base] ?? 'en';
+  return normalizeAppLocale(requested);
 }
 
 export function detectInitialLanguage() {
@@ -168,7 +138,7 @@ export function syncDocumentLanguage(locale: SupportedLocale) {
   }
 
   document.documentElement.lang = locale;
-  document.documentElement.dir = i18n.dir(locale);
+  document.documentElement.dir = getLocaleDirection(locale);
 }
 
 export const i18nInitPromise = i18n.use(initReactI18next).init({

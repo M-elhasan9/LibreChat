@@ -2,6 +2,7 @@ import { atom } from 'recoil';
 import { SettingsViews, LocalStorageKeys } from 'librechat-data-provider';
 import type { TOptionSettings } from '~/common';
 import { CHAT_TITLE_IN_TAB_KEY } from '~/utils/documentTitle';
+import { defaultChatDirection } from '~/store/language';
 import { atomWithLocalStorage } from '~/store/utils';
 import { STTEndpoints } from '~/common';
 
@@ -76,7 +77,7 @@ const localStorageAtoms = {
    */
   steerInterruptsByDefault: atomWithLocalStorage('steerInterruptsByDefault', false),
   maximizeChatSpace: atomWithLocalStorage('maximizeChatSpace', false),
-  chatDirection: atomWithLocalStorage('chatDirection', 'LTR'),
+  chatDirection: atomWithLocalStorage('chatDirection', defaultChatDirection()),
   autoExpandTools: atomWithLocalStorage(LocalStorageKeys.AUTO_EXPAND_TOOLS, false),
   saveDrafts: atomWithLocalStorage('saveDrafts', true),
   /**

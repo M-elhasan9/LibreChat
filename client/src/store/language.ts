@@ -1,5 +1,6 @@
 import { atom } from 'recoil';
 import Cookies from 'js-cookie';
+import { getLocaleDirection } from 'librechat-data-provider';
 import { normalizeLocale } from '~/locales/i18n';
 import { atomWithLocalStorage } from './utils';
 
@@ -27,13 +28,18 @@ const selectorValueByLocale = {
   ar: 'ar-EG',
 } as const;
 
-const defaultLang = () => {
+const resolveInitialLocale = () => {
   const userLang =
     (typeof navigator !== 'undefined' ? navigator.language || navigator.languages?.[0] : null) ??
     'en';
-  const requested = Cookies.get('lang') || readStoredLang() || userLang;
-  return selectorValueByLocale[normalizeLocale(requested)];
+  return normalizeLocale(Cookies.get('lang') || readStoredLang() || userLang);
 };
+
+const defaultLang = () => selectorValueByLocale[resolveInitialLocale()];
+
+/** Chat text direction follows the initial UI locale until the user overrides it. */
+export const defaultChatDirection = () =>
+  getLocaleDirection(resolveInitialLocale()).toUpperCase();
 
 const lang = atomWithLocalStorage('lang', defaultLang());
 const languageLoading = atom<boolean>({

@@ -12,6 +12,7 @@ const compression = require('compression');
 const cookieParser = require('cookie-parser');
 const mongoSanitize = require('express-mongo-sanitize');
 const { logger, runAsSystem } = require('@librechat/data-schemas');
+const { normalizeAppLocale, getLocaleDirection } = require('librechat-data-provider');
 const {
   isEnabled,
   apiNotFound,
@@ -240,9 +241,12 @@ const startServer = async () => {
     });
     res.vary(QUERY_DEVTOOLS_HEADER);
 
-    const lang = req.cookies.lang || req.headers['accept-language']?.split(',')[0] || 'en-US';
-    const saneLang = lang.replace(/"/g, '&quot;');
-    let updatedIndexHtml = indexHTML.replace(/lang="en-US"/g, `lang="${saneLang}"`);
+    /** Resolve to a locale the bundle can actually render, so the first paint
+     * already carries the right direction instead of flipping once React mounts. */
+    const requestedLang = req.cookies.lang || req.headers['accept-language']?.split(',')[0];
+    const lang = normalizeAppLocale(requestedLang);
+    const dir = getLocaleDirection(lang);
+    let updatedIndexHtml = indexHTML.replace(/lang="en-US"/g, `lang="${lang}" dir="${dir}"`);
     updatedIndexHtml = maybeInjectQueryDevtoolsBootstrap(updatedIndexHtml, req);
 
     res.type('html');

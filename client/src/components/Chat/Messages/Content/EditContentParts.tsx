@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useRecoilValue } from 'recoil';
 import { Alert, Button, TextareaAutosize } from '@librechat/client';
 import { ContentTypes, stripReasoningLabelMetadata } from 'librechat-data-provider';
 import { useUpdateMessageContentMutation } from 'librechat-data-provider/react-query';
@@ -10,7 +9,6 @@ import { splitMarkdownIntoBlocks } from './splitMarkdown';
 import { useGetAddedConvo } from '~/hooks/Chat';
 import { useLocalize } from '~/hooks';
 import { cn } from '~/utils';
-import store from '~/store';
 
 type EditableType = ContentTypes.TEXT | ContentTypes.THINK;
 
@@ -78,7 +76,6 @@ export default function EditContentParts({
   renderReadOnlyPart,
 }: EditContentPartsProps) {
   const localize = useLocalize();
-  const isRTL = useRecoilValue(store.chatDirection).toLowerCase() === 'rtl';
   const { conversation } = useMessagesConversation();
   const { ask, getMessages, setMessages } = useMessagesOperations();
   const getAddedConvo = useGetAddedConvo();
@@ -377,7 +374,7 @@ export default function EditContentParts({
           return (
             <label
               key={`editor-${messageId}-${absoluteIndex}`}
-              dir={isRTL ? 'rtl' : 'ltr'}
+              dir="auto"
               className="flex min-w-0 flex-col gap-1.5 text-xs font-medium text-text-secondary"
             >
               {label}
@@ -395,13 +392,13 @@ export default function EditContentParts({
                 aria-keyshortcuts="Control+Enter Meta+Enter Control+S Meta+S Escape"
                 disabled={isBusy}
                 minRows={3}
-                dir={isRTL ? 'rtl' : 'ltr'}
+                dir="auto"
                 className={cn(
                   'message-editor-text max-h-[65vh] min-h-24 w-full resize-y rounded-lg',
                   'border border-border-medium bg-surface-tertiary-alt px-3 py-2',
                   'font-normal text-text-primary',
                   'focus-visible:outline-none',
-                  isRTL ? 'text-right' : 'text-left',
+                  'text-start',
                   'disabled:opacity-50 md:max-h-[75vh]',
                 )}
               />

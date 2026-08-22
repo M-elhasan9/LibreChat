@@ -1,5 +1,4 @@
 import { useRef, useEffect, useCallback, useState } from 'react';
-import { useRecoilValue } from 'recoil';
 import { useForm } from 'react-hook-form';
 import { Alert, Button, TextareaAutosize } from '@librechat/client';
 import { useUpdateMessageMutation } from 'librechat-data-provider/react-query';
@@ -9,7 +8,6 @@ import { useGetAddedConvo } from '~/hooks/Chat';
 import { useLocalize } from '~/hooks';
 import Container from './Container';
 import { cn } from '~/utils';
-import store from '~/store';
 
 const EditMessage = ({
   text,
@@ -31,9 +29,6 @@ const EditMessage = ({
   const { conversationId, parentMessageId, messageId } = message;
   const updateMessageMutation = useUpdateMessageMutation(conversationId ?? '');
   const localize = useLocalize();
-
-  const chatDirection = useRecoilValue(store.chatDirection).toLowerCase();
-  const isRTL = chatDirection === 'rtl';
 
   const getAddedConvo = useGetAddedConvo();
 
@@ -213,13 +208,13 @@ const EditMessage = ({
             'break-words rounded-lg border border-border-medium bg-surface-tertiary-alt',
             'px-3 py-2 text-text-primary',
             'focus-visible:outline-none',
-            isRTL ? 'text-right' : 'text-left',
+            'text-start',
             'disabled:opacity-50 md:max-h-[75vh]',
           )}
           aria-label={localize('com_ui_message_input')}
           aria-keyshortcuts="Control+Enter Meta+Enter Control+S Meta+S Escape"
           disabled={isSubmitting || updateMessageMutation.isLoading}
-          dir={isRTL ? 'rtl' : 'ltr'}
+          dir="auto"
         />
         {/* The actions wrap rather than hold one unbreakable row: on a 320px assistant
             turn the identity column and page padding leave less width than the three

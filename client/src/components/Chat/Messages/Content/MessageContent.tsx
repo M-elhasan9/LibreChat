@@ -119,6 +119,7 @@ const DisplayMessage = ({ text, isCreatedByUser, message, showCursor }: TDisplay
           isCreatedByUser && !enableUserMsgMarkdown && 'whitespace-pre-wrap',
           'text-text-primary',
         )}
+        dir="auto"
       >
         {content}
       </div>
